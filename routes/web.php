@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -28,13 +29,18 @@ Route::view('/test', 'login');
 Route::view('/test2', 'register');
 Route::view('/test3', 'reset-password');
 Route::view('/test4', 'verify-account');
-Route::view('/test5', 'kalaadar.dashboard')->middleware(['auth', 'verified']);
+// Route::view('/test5', 'kalaadar.dashboard')->middleware(['auth', 'verified']);
 Route::view('/test6', 'kalaadar.dashboard2');
 Route::view('/test7', 'kalaadar.dashboard3');
 Route::view('/test8', 'kalaadar.dashboard4');
-Route::view('/test9', 'kalaadar.fifth');
-Route::view('/test10', 'kalaadar.account');
+// Route::view('/test9', 'kalaadar.fifth');
+// Route::view('/test10', 'kalaadar.account');
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/appointment', [UserController::class, 'new_appointment'])->name('new_appointment');
+    Route::get('/integrations', [UserController::class, 'integrations'])->name('integrations');
+    Route::get('/account', [UserController::class, 'account'])->name('account');
+});
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');

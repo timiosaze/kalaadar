@@ -35,13 +35,24 @@
                 });
             }) 
         </script>
+        <script>
+            window.addEventListener('refresh-page', event => {
+                window.location.reload(false); 
+            })
+        </script>
+       <wireui:scripts />
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body>
+        <x-dialog />
+        <x-notifications />
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}
         </div>
+
+        @livewireScripts
         <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
         
     </body>

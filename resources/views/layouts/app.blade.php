@@ -9,14 +9,23 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
-
+        
+        
+        @wireUiScripts
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+        <script>
+            window.addEventListener('refresh-page', event => {
+                window.location.reload(false); 
+            })
+        </script>
         <!-- Styles -->
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
+        <x-dialog />
+        <x-notifications />
+
         <x-jet-banner />
 
         <div class="min-h-screen bg-gray-100">

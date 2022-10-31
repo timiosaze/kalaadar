@@ -9,9 +9,14 @@ module.exports = {
         './resources/views/**/*.blade.php',
         "./resources/**/*.js",
         "./resources/**/*.vue",
-        "./node_modules/flowbite/**/*.js"
+        "./node_modules/flowbite/**/*.js",
+        './vendor/wireui/wireui/resources/**/*.blade.php',
+        './vendor/wireui/wireui/ts/**/*.ts',
+        './vendor/wireui/wireui/src/View/**/*.php'
     ],
-
+    presets: [
+            require('./vendor/wireui/wireui/tailwind.config.js')
+    ],
     theme: {
         extend: {
             colors: {
