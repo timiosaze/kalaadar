@@ -11,36 +11,11 @@
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
         <link rel="stylesheet" href="{{asset('stylesheet.css')}}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script>
-            $(document).ready(function() {
-                console.log('loaded');
-
-                $('#bars-icon').click(function(){
-                    
-                    console.log("set");
-                    var element = document.getElementById("aside");
-                    if(element.classList.contains("hidden")){
-                        element.classList.remove("hidden");
-                    } else {
-                        element.classList.add("hidden");
-                    }
-
-                });
-                $('#close-aside').click(function(){
-                    
-                    console.log("set");
-                    var element = document.getElementById("aside");
-                    element.classList.add("hidden");
-
-                });
-            }) 
-        </script>
-        <script>
-            window.addEventListener('refresh-page', event => {
-                window.location.reload(false); 
-            })
-        </script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="{{asset('scripts/checkout.js')}}"></script>
        <wireui:scripts />
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
@@ -53,7 +28,12 @@
         </div>
 
         @livewireScripts
+
+        @stack('scripts')
         <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
-        
+        <script src="https://unpkg.com/flowbite@1.5.3/dist/datepicker.js"></script>
+        <script src="{{asset('scripts/jquery-3.6.1.min.js')}}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="{{asset('scripts/script.js')}}"></script>
     </body>
 </html>

@@ -9,7 +9,7 @@ class UserController extends Controller
     //
     public function new_appointment()
     {
-        return view('kalaadar.new');
+        return view('kalaadar.new_appointment');
     }
 
     public function integrations()
@@ -20,5 +20,22 @@ class UserController extends Controller
     public function account()
     {
         return view('kalaadar.account');
+    }
+    public function test()
+    {
+        $array = [];
+        $arr = ['00', '15', '30', '45'];
+        for ($i=0; $i < 24; $i++) { 
+            # code...
+            foreach ($arr as $j) {
+                if($i < 10){
+                    $value = '0' . strval($i) . ':' . $j;
+                } else {
+                    $value = strval($i) . ':' . $j;
+                }
+                array_push($array, $value);
+            }
+        }
+        return $array;
     }
 }

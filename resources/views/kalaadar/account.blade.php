@@ -5,7 +5,7 @@
                 <div class="flex items-center pl-2 mb-5">
                     <img src="{{asset('images/kalaadar-logo.png')}}" class="mr-3 h-6 sm:h-8" alt="Flowbite Logo" />
                     <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Kalaadar</span>
-                    <button class="ml-auto hover:text-blue-600" id="close-aside">
+                    <button class="ml-auto hover:text-primary-600" id="close-aside">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                           </svg>
@@ -13,7 +13,7 @@
                 </div>
                 <ul class="space-y-2">
                     <li>
-                        <a href="{{ route('new_appointment') }}" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-md dark:text-white hover:bg-blue-300 dark:hover:bg-gray-700 group">
+                        <a href="{{ route('new_appointment') }}" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-md dark:text-white hover:bg-primary-300 dark:hover:bg-gray-700 group">
                             <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_34_6521" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
                                 <rect width="24" height="24" fill="#D9D9D9"/>
@@ -26,7 +26,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('integrations') }}" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-blue-300 dark:hover:bg-gray-700 group">
+                        <a href="{{ route('integrations') }}" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-primary-300 dark:hover:bg-gray-700 group">
                             <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_34_6388" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
                                 <rect width="24" height="24" fill="#D9D9D9"/>
@@ -39,7 +39,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('account') }}" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-blue-300  dark:hover:bg-gray-700 group">
+                        <a href="{{ route('account') }}" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-primary-300  dark:hover:bg-gray-700 group">
                             <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_34_6407" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
                                 <rect width="24" height="24" fill="#D9D9D9"/>

@@ -18,6 +18,7 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "jquery": "^3.6.1",
         "timezones-list": "^3.0.1"
     }
 }

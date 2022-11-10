@@ -20,7 +20,7 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                primary: {"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"}
+                primary: {"50":"#eff6ff","100":"#FAFEFF","200":"#D7F5FC","300":"#BDF0FC","400":"#126376","500":"#126376","600":"#126376","700":"#126376","800":"#126376","900":"#1e3a8a"}
             },
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],

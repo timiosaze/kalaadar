@@ -1,5 +1,5 @@
 <div>
-    <button onclick="$openModal('uploadModal')" type="button" class="text-blue-600 font-semibold bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 rounded-md text-sm px-5 py-1 mb-2 shadow-md dark:bg-gray-800 dark:text-blue-600 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Upload</button>
+    <button onclick="$openModal('uploadModal')" type="button" class="text-primary-600 font-semibold bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 rounded-md text-sm px-5 py-1 mb-2 shadow-md dark:bg-gray-800 dark:text-primary-600 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Upload</button>
     <x-modal wire:model.defer="uploadModal" x-on:close-modal.window="on = false">
             <x-card title="Upload Avatar">
             
