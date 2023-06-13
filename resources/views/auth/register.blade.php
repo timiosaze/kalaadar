@@ -12,6 +12,8 @@
                 <p class="text-sm font-light text-gray-800 dark:text-gray-300">
                     Let your people reach out to you <strong>efficiently</strong> 
                 </p>
+                        <x-jet-validation-errors class="mb-4" />
+
                 <form class="mt-4 space-y-6 sm:mt-6"  method="POST" action="{{ route('register') }}" x-data="countries">
                     @csrf
                     <div class="grid gap-6 sm:grid-cols-2">
@@ -31,12 +33,19 @@
                             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm Password</label>
                             <x-jet-input id="password_confirmation" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"  type="password" name="password_confirmation" required autocomplete="new-password" />
                         </div>
+                        {{-- <div>
+                            <label for="timezone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Choose Timezone</label>
+                            <select x-data="timezones" name="timezone" id="timezone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <template x-for="timezone in timezones">
+                                    <option x-text="timezone.label"></option>
+                                </template>
+                            </select>
+                        </div> --}}
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Country</label>
-                            <select id="countries" name="country" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Choose a country</option>
-                                <template x-for="country in data">
-                                    <option :value="country['name']" x-text="country['name']"></option>
+                            <label for="email" class="block mb-2 text-base font-medium text-gray-900 dark:text-gray-300">Timezone</label>
+                            <select x-data="timezones" name="timezone" id="timezone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <template x-for="(timezone, index) in data" :key="index">
+                                    <option x-text="`${timezone['timezone']} ${timezone['time']}`"></option>
                                 </template>
                             </select>
                         </div>

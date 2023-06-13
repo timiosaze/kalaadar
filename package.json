@@ -18,6 +18,9 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "@ryangjchandler/alpine-clipboard": "^2.2.0",
+        "countries-and-timezones": "^3.3.0",
+        "country-timezone-list": "^1.0.5",
         "jquery": "^3.6.1",
         "timezones-list": "^3.0.1"
     }

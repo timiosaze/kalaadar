@@ -10,15 +10,22 @@ class Day extends Model
     use HasFactory;
 
     protected $fillable = [
-        'appointment_id',
+        'user_id',
+        'event_id',
         'name',
         'end_time',
-        'start_time'
+        'start_time',
+        'start_id',
+        'end_id'
     ];
 
-    public function appointment()
+    public function event()
     {
-        return $this->belongsTo(Appointment::class);
+        return $this->belongsTo(Event::class);
     }
-    
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

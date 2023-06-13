@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('days', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('appointment_id');
+            $table->bigInteger('user_id');
+            $table->bigInteger('event_id');
             $table->string('name');
             $table->string('start_time');
             $table->string('end_time');

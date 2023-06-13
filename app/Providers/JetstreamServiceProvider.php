@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Actions\Jetstream\DeleteUser;
+use App\Http\Resources\TimeResource;
+use App\Models\Time;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 
 class JetstreamServiceProvider extends ServiceProvider
@@ -25,9 +28,10 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->configurePermissions();
-
-        Jetstream::deleteUsersUsing(DeleteUser::class);
+        Fortify::registerView(function () {
+            $times =  TimeResource::collection(Time::all());
+            return view('auth.register', compact('times'));
+        });
     }
 
     /**

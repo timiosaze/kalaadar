@@ -21,6 +21,10 @@ class UserController extends Controller
     {
         return view('kalaadar.account');
     }
+    public function appointment()
+    {
+        return view('kalaadar.appointment');
+    }
     public function test()
     {
         $array = [];

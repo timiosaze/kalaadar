@@ -33,6 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'name',
         'email',
         'password',
+        'timezone',
         'email_verified_at'
     ];
 
@@ -80,8 +81,8 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
             ->addMediaCollection('my-collection')
             ->singleFile();
     }
-    public function userbio()
+    public function events()
     {
-        return $this->hasOne(Userbio::class);
+        return $this->hasMany(Event::class);
     }
 }

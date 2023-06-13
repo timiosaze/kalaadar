@@ -8,17 +8,16 @@ $('#select').on('change', function () {
   
 $("#selector").flatpickr({
     minDate: "today",
-    mode: "multiple",
+    mode: "range",
     altInput: true,
     altFormat: "F j, Y",
     dateFormat: "Y-m-d",
-    "disable": [
-        function(date) {
-            // return true to disable
-            return (date.getDay() === 0 || date.getDay() === 6);
-
-        }
-    ],
 });
 
- 
+$("#selector2").flatpickr({
+    minDate: "today",
+    altInput: true,
+    altFormat: "F j, Y",
+    dateFormat: "Y-m-d",
+});
+

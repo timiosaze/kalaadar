@@ -77,13 +77,13 @@
                     </a>
                     <p class="mb-6 font-normal text-center text-sm text-gray-500 dark:text-gray-400">Create an appointment for people to easily book a meeting or an event with you more efficiently.</p>
                     <div class="flex items-center justify-center">
-                        <button type="button" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-md text-xs px-3 py-2 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        <a href="{{ route('appointment') }}" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-md text-xs px-3 py-2 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                             
                             Create appointment
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

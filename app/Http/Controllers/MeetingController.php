@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\ZoomMeeting;
 use App\Traits\ZoomMeetingTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class MeetingController extends Controller
@@ -21,7 +23,7 @@ class MeetingController extends Controller
         $response = $this->zoomGet($path);
 
         $data = json_decode($response->body(), true);
-        $data['meetings'] = array_map(function (&$m) {
+        $data['meetings'] = array_map(function ( $m ) {
             $m['start_at'] = $this->toUnixTimeStamp($m['start_time'], $m['timezone']);
             return $m;
         }, $data['meetings']);
@@ -31,40 +33,72 @@ class MeetingController extends Controller
             'data' => $data,
         ];
     }
-    public function create(Request $request) { 
-        $validator = Validator::make($request->all(), [
-            'topic' => 'required|string',
-            'start_time' => 'required|date',
-            'agenda' => 'string|nullable',
-        ]);
+    public function create(Event $event) {
+        // dd($event);
+       
+        $summary = $event->eventname;
+        $description = $event->description;
+        $schedule_for = $event->bookingdetail->email;
+        $duration = $event->bookingevent->duration;
+        $timezone = $event->bookingevent->timezone;
+        $start_time = $event->booking->start_time;
+
+
+        // $data = Session::get('data');
+        // dd($data);
+        // $validator = Validator::make($request->all(), [
+        //     'topic' => 'required|string',
+        //     'start_time' => 'required|date',
+        //     'agenda' => 'string|nullable',
+        // ]);
         
-        if ($validator->fails()) {
-            return [
-                'success' => false,
-                'data' => $validator->errors(),
-            ];
-        }
-        $data = $validator->validated();
+        // if ($validator->fails()) {
+        //     return [
+        //         'success' => false,
+        //         'data' => $validator->errors(),
+        //     ];
+        // }
+        // $data = $validator->validated();
     
         $path = 'users/me/meetings';
+        // $response = $this->zoomPost($path, [
+        //     'topic' => $data['topic'],
+        //     'type' => self::MEETING_TYPE_SCHEDULE,
+        //     'start_time' => $this->toZoomTimeFormat($data['start_time']),
+        //     'duration' => $data['duration'],
+        //     'timezone' => $data['timezone'],
+        //     'agenda' => 'Kalaadar',
+        //     'settings' => [
+        //         'host_video' => true,
+        //         'participant_video' => true,
+        //         'waiting_room' => true,
+        //     ]
+        // ]);
+    
         $response = $this->zoomPost($path, [
-            'topic' => $data['topic'],
+            'topic' => $summary,
+            "schedule_for" => $schedule_for,
             'type' => self::MEETING_TYPE_SCHEDULE,
-            'start_time' => $this->toZoomTimeFormat($data['start_time']),
-            'duration' => 30,
-            'agenda' => $data['agenda'],
+            'start_time' => $this->toZoomTimeFormat($start_time),
+            'duration' => $duration,
+            'timezone' => $timezone,
+            'agenda' => $description,
             'settings' => [
                 'host_video' => true,
                 'participant_video' => true,
                 'waiting_room' => true,
             ]
         ]);
-    
-    
-        return [
-            'success' => $response->status() === 201,
-            'data' => json_decode($response->body(), true),
-        ];
+
+        // return [
+        //     'success' => $response->status() === 201,
+        //     'data' => json_decode($response->body(), true),
+        // ];
+        $data = json_decode($response->body(), true);
+        $event = $data['join_url'] . ' ' . $data['password'];
+        // return implode('&', $arr);
+        return redirect()->route('google.create', ['event' => urlencode($event), 'option' => 'zoom']);
+
     }
     public function get(Request $request, string $id) { 
 
@@ -80,6 +114,7 @@ class MeetingController extends Controller
             'success' => $response->ok(),
             'data' => $data,
         ];
+            
     }
     public function update(Request $request, string $id) { 
         $validator = Validator::make($request->all(), [

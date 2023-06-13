@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .mt-minus-15 {
+        margin-top: -15px;
+    }
+    .mt-minus-10 {
+        margin-top: -10px;
+    }
+}

@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\BookingEventController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\microsoftapi;
 use App\Http\Controllers\MicrosoftController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\TimeController;
 use App\Http\Controllers\UserController;
+use App\Models\BookingEvent;
+use App\Models\Event as AppEvent;
+use App\Models\Schedule;
 use App\Models\SubscriptionCreated;
 use App\PulkitJalan\Client;
 use Carbon\Carbon;
@@ -16,9 +22,12 @@ use Google\Service\Calendar\Event;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model\Event as MicrosoftEvent;
 use Microsoft\Graph\Model\OnlineMeeting;
@@ -41,8 +50,31 @@ use Sebbmyr\Teams\TeamsConnector;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/oauth2callback.php', function(Request $request){
+    // $value = $request->session()->get('calendarEvent');
+    // dd(session('calendarEvent'));
+    $state = request()->get('state');    // GET['state'];
+    $state = base64_decode(strtr($state, '-_,', '+/='));
+    // dd($state); 
+    $option = explode(" ", $state)[1];
+    if($option == 'google'){
+        $id = explode(" ", $state)[0];
+        // dd($id);
+    }
+    $the_event = AppEvent::find($id); 
+    $start_time =  $the_event->booking->booking_date . ' ' .  $the_event->booking->start_time;
+    $end_time = $the_event->booking->booking_date . ' ' . $the_event->booking->end_time;
+    // dd($this->start_time);
+    $summary = $the_event->eventname;
+    $description = $the_event->description;
+    $location = $the_event->bookingdetail->location;
+    $timezone = $the_event->bookingevent->timezone;
+    $event_creator_email = $the_event->user->email;
+    $booker_email = $the_event->bookingdetail->email;
 
-Route::get('/oauth2callback.php', function(){
+        // dd(Carbon::createFromFormat('Y-m-d H:i',$start_time), Carbon::now(), Carbon::createFromFormat('Y-m-d H:i', $end_time), Carbon::now()->addHour());
+        // $calendarEvent = session('calendarEvent');
+        // dd($calendarEvent);
     $client = new Google_Client();
     $client->setAuthConfig(public_path('files/client_secret_68036643521-8ujgf4t0pndql4usb2qneori0ftg1htn.apps.googleusercontent.com.json'));
     $client->addScope(Calendar::CALENDAR);
@@ -55,7 +87,9 @@ Route::get('/oauth2callback.php', function(){
     $client->setPrompt('consent');
 
     $client->setIncludeGrantedScopes(true);
-    $client->setLoginHint('timiade1993@gmail.com');
+    $email = 'timiade1993@gmail.com';
+
+    $client->setLoginHint($email);
     // $client->setApprovalPrompt('consent');
  
     // $auth_url = $client->createAuthUrl();
@@ -66,9 +100,9 @@ Route::get('/oauth2callback.php', function(){
     // dd($access_token);
     $client->setAccessToken($access_token);
     // Refer to the PHP quickstart on how to setup the environment:
-// https://developers.google.com/calendar/quickstart/php
-// Change the scope to Google_Service_Calendar::CALENDAR and delete any stored
-// credentials.
+    // https://developers.google.com/calendar/quickstart/php
+    // Change the scope to Google_Service_Calendar::CALENDAR and delete any stored
+    // credentials.
     $service = new Calendar($client);
     $calendarList = $service->calendarList->listCalendarList();
 
@@ -84,35 +118,65 @@ Route::get('/oauth2callback.php', function(){
     //     break;
     //   }
     // }
+    $uuid = Str::uuid();
+    $url = "http:://127.0.0.1:8000/schedules/".$uuid."/";
+    // $event = new Event(array(
+    //     'summary' => 'Google I/O 2015',
+    //     'location' => '800 Howard St., San Francisco, CA 94103',
+    //     'description' => "A chance to hear more about Google\'s developer products. $url",
+    //     'start' => array(
+    //     'dateTime' => Carbon::now(),
+    //     'timeZone' => 'America/Los_Angeles',
+    //     ),
+    //     'end' => array(
+    //     'dateTime' => Carbon::now()->addHour(),
+    //     'timeZone' => 'America/Los_Angeles',
+    //     ),
+    //     'recurrence' => array(
+    //     'RRULE:FREQ=DAILY;COUNT=1'
+    //     ),
+    //     'attendees' => array(
+    //     array('email' => 'lpage@example.com'),
+    //     array('email' => 'sbrin@example.com'),
+    //     ),
+    //     'reminders' => array(
+    //     'useDefault' => FALSE,
+    //     'overrides' => array(
+    //         array('method' => 'email', 'minutes' => 24 * 60),
+    //         array('method' => 'popup', 'minutes' => 10),
+    //     ),
+    //     ),
+    // ));
     $event = new Event(array(
-        'summary' => 'Google I/O 2015',
-        'location' => '800 Howard St., San Francisco, CA 94103',
-        'description' => 'A chance to hear more about Google\'s developer products.',
+        'summary' => $summary, 
+        'location' => $location, 
+        'description' => $description . ' ' . $url, 
         'start' => array(
-        'dateTime' => Carbon::now(),
-        'timeZone' => 'America/Los_Angeles',
+        'dateTime' => Carbon::createFromFormat('Y-m-d H:i',$start_time), 
+        'timeZone' => $timezone, 
         ),
         'end' => array(
-        'dateTime' => Carbon::now()->addHour(),
-        'timeZone' => 'America/Los_Angeles',
+        'dateTime' => Carbon::createFromFormat('Y-m-d H:i', $end_time), 
+        'timeZone' => $timezone, 
         ),
         'recurrence' => array(
-        'RRULE:FREQ=DAILY;COUNT=2'
+        'RRULE:FREQ=DAILY;COUNT=1'
         ),
+        'sendUpdates' => 'all',
         'attendees' => array(
-        array('email' => 'lpage@example.com'),
-        array('email' => 'sbrin@example.com'),
+        array('email' => $event_creator_email), 
+        array('email' => $booker_email), 
         ),
         'reminders' => array(
-        'useDefault' => FALSE,
-        'overrides' => array(
-            array('method' => 'email', 'minutes' => 24 * 60),
-            array('method' => 'popup', 'minutes' => 10),
-        ),
+            'useDefault' => FALSE,
+            'overrides' => array(
+                array('method' => 'email', 'minutes' => 24 * 60),
+                array('method' => 'popup', 'minutes' => 10),
+            ),
         ),
     ));
     
-    $calendarId = 'timiade1993@gmail.com';
+    $calendarId = 'primary';
     $event = $service->events->insert($calendarId, $event);
 
     $conference = new ConferenceData();
@@ -122,32 +186,73 @@ Route::get('/oauth2callback.php', function(){
     $event->setConferenceData($conference);
 
     $event = $service->events->patch($calendarId, $event->id, $event, ['conferenceDataVersion' => 1]);
+    $schedule = new Schedule();
+    $schedule->uuid = $uuid;
+    $schedule->link = $event->hangoutLink;
+    $schedule->name = $location;
+    $schedule->user_id = Auth::id();
+    $schedule->event_id = 5;
+    $schedule->save();
     dd($event);
 });
-Route::get('/client', function () {
-    
+Route::get('/test', function(){
+    dd(Carbon::now());
+    $dt = Carbon::createFromFormat('Y-m-d H:i', '2023-5-7 08:30');
+    $dt_2 = $dt->addMinutes(45);
+    // echo $dt;
+    // $event = AppEvent::find(5);
+    // dd($event);
+    // return redirect()->route('google.create', ['event' => $event]);
+});
+Route::get('/schedules/{uuid}/', function($uuid){
+    $schedule = Schedule::where('uuid', $uuid)->first();
+    // dd($schedule->link);
+    return redirect()->away($schedule->link);
+});
+
+Route::get('/client/{event}/{option}', function(AppEvent $event, $option){
+
+    if($option == 'google'){
+        $param = $event->id . ' ' . $option;
+    }
+
+    if($option == 'zoom'){
+        $arr = urldecode($event);
+        $arr = explode(' ', $arr);
+        $param = implode($arr) . ' ' . $option; 
+    }
+
+    // dd($param);
+       
+
     $client = new Google_Client();
     $client->setAuthConfig(public_path('files/client_secret_68036643521-8ujgf4t0pndql4usb2qneori0ftg1htn.apps.googleusercontent.com.json'));
     $client->addScope(Calendar::CALENDAR);
-    $client->setRedirectUri('https://kalaadar.test/oauth2callback.php');
+    $client->setRedirectUri('http://127.0.0.1:8000/oauth2callback.php');
     // offline access will give you both an access and refresh token so that
     // your app can refresh the access token without user interaction.
     $client->setAccessType('offline');
     // Using "consent" ensures that your application always receives a refresh token.
     // If you are not using offline access, you can omit this.
     $client->setPrompt('consent');
+    
+    $params = strtr(base64_encode($param), '+/=', '-_,');
+    $client->setState($params);
 
     $client->setIncludeGrantedScopes(true);
-    $client->setLoginHint('timiade1993@gmail.com');
+    $email = 'timiade1993@gmail.com';
+
+    $client->setLoginHint($email);
     // $client->setApprovalPrompt('consent');
  
     $auth_url = $client->createAuthUrl();
-    // dd(filter_var($auth_url, FILTER_SANITIZE_URL));
+    // dd(filter_var($auth_url, FILTER_SANITIZE_URL) . "&event_id=$event->id");
     return redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
     
-});
+})->where('event', '.*')->name('google.create');
 
-
+// Route::get('/oauth2callback.php', [GoogleController::class, 'oauth'])->name('google.oauth');
+// Route::get('/client/{arr}', [GoogleController::class, 'client'])->where('arr', '.*')->name('google.zoom.create');
 
 Route::get('/microsoft', function() {
     $authUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
@@ -173,12 +278,13 @@ Route::get('login-redirect', function (\Illuminate\Http\Request $request) {
 
     $accessToken = $authReponse['access_token'];
 
-    $myFirstTeam     = \Illuminate\Support\Facades\Http::withToken($accessToken)->get('https://graph.microsoft.com/v1.0/me/joinedTeams')['value'][0];
+    $myFirstTeam     = \Illuminate\Support\Facades\Http::withToken($accessToken)->get('https://graph.microsoft.com/v1.0/me/joinedTeams')['value'];
+    // dd($myFirstTeam['id']);
     return [
-        'id'          => $myFirstTeam['id'],
-        'name'        => $myFirstTeam['displayName'],
-        'description' => $myFirstTeam['description'],
-        'channels'    => \Illuminate\Support\Facades\Http::withToken($accessToken)->get('https://graph.microsoft.com/v1.0/teams/' . $myFirstTeam['id'] . '/channels')['value']
+        'id'          => $myFirstTeam[0]['id'],
+        'name'        => $myFirstTeam[0]['displayName'],
+        'description' => $myFirstTeam[0]['description'],
+        'channels'    => \Illuminate\Support\Facades\Http::withToken($accessToken)->get('https://graph.microsoft.com/v1.0/teams/' . $myFirstTeam[0]['id'] . '/channels')['value']
     ];
 })->name('login.redirect');
 
@@ -186,7 +292,7 @@ Route::get('/countries', function () {
     $lines = file('files/countries.txt', FILE_IGNORE_NEW_LINES);
     dd($lines);
 });
-Route::view('/test', 'login');
+// Route::view('/test', 'login');
 Route::view('/test2', 'register');
 Route::view('/test3', 'reset-password');
 Route::view('/test4', 'verify-account');
@@ -198,6 +304,11 @@ Route::view('/test9', 'kalaadar.integrations');
 Route::view('/test10', 'kalaadar.book_appointment');
 Route::view('/test11', 'kalaadar.book_appointment2');
 Route::view('/test12', 'kalaadar.payment');
+Route::view('/test13', 'kalaadar.events');
+Route::view('/test14', 'kalaadar.event')->middleware(['auth', 'verified']);
+
+Route::get('/meetings/{event}', [MeetingController::class, 'create'])->name('zoom.create');
+
 
 Route::controller(StripeController::class)->group(function(){
     Route::get('stripe', 'stripe');
@@ -207,9 +318,9 @@ Route::get('/success', [StripeController::class, 'success'])->name('stripe_succe
 Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/appointment', [UserController::class, 'new_appointment'])->name('new_appointment');
-    Route::get('/integrations', [UserController::class, 'integrations'])->name('integrations');
-    Route::get('/account', [UserController::class, 'account'])->name('account');
+    Route::get('/events', [EventController::class, 'index'])->name('user.events');
+    Route::get('/events/new', [EventController::class, 'create'])->name('new.event');
+    Route::get('/events/{id}', [EventController::class, 'show'])->name('create.event');
 });
 
 Route::get('/testing', [UserController::class, 'test']);
@@ -288,5 +399,9 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/{user_name_slug}/{link}', [BookingEventController::class, 'show'])->name('create.bookings');
 });
 

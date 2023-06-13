@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('appointment_id');
+            $table->bigInteger('user_id');
+            $table->bigInteger('event_id');
             $table->string('question');
             $table->string('answer');
             $table->timestamps();

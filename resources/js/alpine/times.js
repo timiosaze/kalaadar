@@ -6,12 +6,15 @@ export default () => ({
     open: false,
     init() {
         console.log('I am called automatically')
-        this.getTimes()
     },
     data: [],
-    getTimes() {
-        axios.get('https://kalaadar.test/api/times')
-        .then(response => this.data = response.data.data)
-        .catch(error =>  console.log(error));
-    },
+    append() {
+        // alert("yes")
+        const newDiv = document.createElement("div");
+        newDiv.classList.add('flex', 'flex-col', 'items-center', 'justify-around');
+        const el = this.$el.previousElementSibling
+        newDiv.appendChild(el);
+        this.$el.insertAdjacentHTML("afterend",newDiv.innerHTML);
+        console.log(el)
+    }
 })

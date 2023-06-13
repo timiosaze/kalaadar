@@ -18,6 +18,22 @@ module.exports = {
             require('./vendor/wireui/wireui/tailwind.config.js')
     ],
     theme: {
+        screens: {
+            'sm': '640px',
+            // => @media (min-width: 640px) { ... }
+      
+            'md': '768px',
+            // => @media (min-width: 768px) { ... }
+      
+            'lg': '1024px',
+            // => @media (min-width: 1024px) { ... }
+      
+            'xl': '1280px',
+            // => @media (min-width: 1280px) { ... }
+      
+            '2xl': '1536px',
+            // => @media (min-width: 1536px) { ... }
+        },
         extend: {
             colors: {
                 primary: {"50":"#eff6ff","100":"#FAFEFF","200":"#D7F5FC","300":"#BDF0FC","400":"#126376","500":"#126376","600":"#126376","700":"#126376","800":"#126376","900":"#1e3a8a"}
